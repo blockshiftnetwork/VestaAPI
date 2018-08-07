@@ -19,7 +19,7 @@ return [
     'servers' => [
         'testVDS' => [
             'host' => '0.0.0.0',
-            'key'  => 'secretString',
+            'key'  => env('VESTA_KEY', 'secretString'),
         ],
     ],
 
