@@ -49,27 +49,11 @@ class VestaAPI
             throw new \Exception('Specified server not found in config');
         }
 
-        if ($this->keysCheck($server, $allServers)) {
-            throw new \Exception('Specified server config does not contain host or key');
-        }
-
-        $this->key = (string) $allServers[$server]['key'];
         $this->host = (string) $allServers[$server]['host'];
 
         return $this;
     }
-
-    /**
-     * @param string $server
-     * @param array  $config
-     *
-     * @return bool
-     */
-    private function keysCheck($server, $config)
-    {
-        return !isset($config[$server]['key']) || !isset($config[$server]['host']);
-    }
-
+    
     /**
      * @param string $userName
      *
@@ -77,12 +61,18 @@ class VestaAPI
      *
      * @return $this
      */
-    public function setUserName($userName = '')
+    public function setCredentials($userName = '', $password = '')
     {
         if (empty($userName)) {
-            throw new \Exception('Server is not specified');
+            throw new \Exception('Username is not specified');
         }
         $this->userName = $userName;
+
+        if (empty($password)) {
+            throw new \Exception('Password is not specified');
+        }
+
+        $this->key = $password;
 
         return $this;
     }
