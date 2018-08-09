@@ -10,16 +10,16 @@ class VestaAPI
     use BD, DNS, User, Web, Service, Cron, FileSystem;
 
     /**
-     * @var
-     */
-    public $userName = '';
-
-    /**
      * return no|yes|json.
      *
      * @var string
      */
     public $returnCode = 'yes';
+
+    /**
+     * @var
+     */
+    private $userName = '';
 
     /**
      * @var string
@@ -49,9 +49,30 @@ class VestaAPI
             throw new \Exception('Specified server not found in config');
         }
 
+        if ($this->keysCheck($server, $allServers)) {
+            throw new \Exception(
+                'Specified server config does not contain host, user or key'
+            );
+        }
+
         $this->host = (string) $allServers[$server]['host'];
+        $this->username = (string) $allServers[$server]['admin_user'];
+        $this->key = (string) $allServers[$server]['admin_password'];
 
         return $this;
+    }
+
+    /**
+     * @param string $server
+     * @param array  $config
+     *
+     * @return bool
+     */
+    private function keysCheck($server, $config)
+    {
+        return !isset($config[$server]['admin_user']) ||
+               !isset($config[$server]['host']) ||
+               !isset($config[$server]['admin_password']);
     }
     
     /**
