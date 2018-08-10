@@ -10,16 +10,16 @@ class VestaAPI
     use BD, DNS, User, Web, Service, Cron, FileSystem;
 
     /**
-     * @var
-     */
-    public $userName = '';
-
-    /**
      * return no|yes|json.
      *
      * @var string
      */
     public $returnCode = 'yes';
+
+    /**
+     * @var
+     */
+    private $userName = '';
 
     /**
      * @var string
@@ -50,11 +50,14 @@ class VestaAPI
         }
 
         if ($this->keysCheck($server, $allServers)) {
-            throw new \Exception('Specified server config does not contain host or key');
+            throw new \Exception(
+                'Specified server config does not contain host, user or key'
+            );
         }
 
-        $this->key = (string) $allServers[$server]['key'];
         $this->host = (string) $allServers[$server]['host'];
+        $this->username = (string) $allServers[$server]['admin_user'];
+        $this->key = (string) $allServers[$server]['admin_password'];
 
         return $this;
     }
@@ -67,9 +70,11 @@ class VestaAPI
      */
     private function keysCheck($server, $config)
     {
-        return !isset($config[$server]['key']) || !isset($config[$server]['host']);
+        return !isset($config[$server]['admin_user']) ||
+               !isset($config[$server]['host']) ||
+               !isset($config[$server]['admin_password']);
     }
-
+    
     /**
      * @param string $userName
      *
@@ -77,12 +82,18 @@ class VestaAPI
      *
      * @return $this
      */
-    public function setUserName($userName = '')
+    public function setCredentials($userName = '', $password = '')
     {
         if (empty($userName)) {
-            throw new \Exception('Server is not specified');
+            throw new \Exception('Username is not specified');
         }
         $this->userName = $userName;
+
+        if (empty($password)) {
+            throw new \Exception('Password is not specified');
+        }
+
+        $this->key = $password;
 
         return $this;
     }
