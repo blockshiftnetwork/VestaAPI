@@ -48,6 +48,19 @@ trait Web
     }
 
     /**
+     * Add Web/DNS/Mail Domain
+     *
+     * @param $user
+     * @param $domain
+     *
+     * @return mixed
+     */
+    public function addFullDomain($user, $domain)
+    {
+        return $this->send('v-add-domain', $user, $domain);
+    }
+
+    /**
      * Add Web Domains.
      *
      * @param $domain
