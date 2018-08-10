@@ -43,6 +43,7 @@ class VestaAPI
         if (empty($server)) {
             throw new \Exception('Server is not specified');
         }
+
         $allServers = config('vesta.servers');
 
         if (!isset($allServers[$server])) {
@@ -56,7 +57,7 @@ class VestaAPI
         }
 
         $this->host = (string) $allServers[$server]['host'];
-        $this->username = (string) $allServers[$server]['admin_user'];
+        $this->userName = (string) $allServers[$server]['admin_user'];
         $this->key = (string) $allServers[$server]['admin_password'];
 
         return $this;
